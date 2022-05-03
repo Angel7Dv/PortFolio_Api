@@ -14,7 +14,7 @@ class Exp(models.Model):
     end_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return self.title
+        return self.my_title
 
 
 class Skills(models.Model):

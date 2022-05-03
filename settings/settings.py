@@ -36,12 +36,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))  # add this
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = True 
 
-if DEBUG:
-    ALLOWED_HOSTS = ['*']
-else:
-    ALLOWED_HOSTS = [env('ALLOWED_HOSTS')]
+ALLOWED_HOSTS = ['127.0.0.1', 'ragandroll.herokuapp.com']
 
 
 # Application definition
@@ -76,15 +73,12 @@ MIDDLEWARE = [
 ]
 
 # url frontend request
-# CORS_ORIGIN_ALLOW_ALL=True
-if DEBUG:
-    CORS_ALLOWED_ORIGINS = [
-        'http://localhost:3000',
-    ]
-else:
-    CORS_ALLOWED_ORIGINS = [
-        env('CORS_ALLOWED_ORIGINS'),
-    ]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    env('CORS_ALLOWED_ORIGINS')
+]
+
 
 
 ROOT_URLCONF = 'settings.urls'
@@ -119,34 +113,39 @@ WSGI_APPLICATION = 'settings.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': env('POSTGRES_NAME'),
-            'USER': env('POSTGRES_USER'),
-            'PASSWORD': env('POSTGRES_PASSWORD'),
-            'HOST': env('POSTGRES_HOST'),
-            'PORT': '5432',
-        }
-    }
-else: 
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': env('PRODUCTION_POSTGRES_NAME'),
-            'USER': env('PRODUCTION_POSTGRES_USER'),
-            'PASSWORD': env('PRODUCTION_POSTGRES_PASSWORD'),
-            'HOST': env('PRODUCTION_POSTGRES_HOST'),
-            'PORT': '5432',
-        }
-    }
+# if not env('LOCAL_DEV'):
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#             'NAME': env('POSTGRES_NAME'),
+#             'USER': env('POSTGRES_USER'),
+#             'PASSWORD': env('POSTGRES_PASSWORD'),
+#             'HOST': env('POSTGRES_HOST'),
+#             'PORT': '5432',
+#         }
+#     }
+# else:
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': env('PRODUCTION_POSTGRES_NAME'),
+#         'USER': env('PRODUCTION_POSTGRES_USER'),
+#         'PASSWORD': env('PRODUCTION_POSTGRES_PASSWORD'),
+#         'HOST': env('PRODUCTION_POSTGRES_HOST'),
+#         'PORT': '5432',
+#     }
+# }
+
 
 # # Usa la variable de entorno DATABASE_URL="esta"
-# django_heroku.settings(locals())
-# options = DATABASES['default'].get('OPTIONS', {})
-# options.pop('sslmode', None)
+DATABASES = {}
+django_heroku.settings(locals())
+options = DATABASES['default'].get('OPTIONS', {})
+options.pop('sslmode', None)
 # DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+DATABASES = {'default': dj_database_url.config(default='postgres://postgres:123456@localhost/portfolio')}
 
 
 # Password validation
